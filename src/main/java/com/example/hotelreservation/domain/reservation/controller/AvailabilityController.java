@@ -1,0 +1,3 @@
+package com.example.hotelreservation.domain.reservation.controller;
+import com.example.hotelreservation.domain.reservation.dto.AvailabilityResponse; import com.example.hotelreservation.domain.reservation.service.ReservationService; import lombok.RequiredArgsConstructor; import org.springframework.web.bind.annotation.*; import java.time.LocalDate;
+@RestController @RequestMapping("/hotels/{hotelId}/room-types/{roomTypeId}/availability") @RequiredArgsConstructor public class AvailabilityController { private final ReservationService service; @GetMapping public AvailabilityResponse get(@PathVariable Long hotelId,@PathVariable String roomTypeId,@RequestParam LocalDate from,@RequestParam LocalDate to){return service.availability(hotelId,roomTypeId,from,to);} }
