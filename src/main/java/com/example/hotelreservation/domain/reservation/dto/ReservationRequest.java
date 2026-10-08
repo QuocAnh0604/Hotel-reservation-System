@@ -1,12 +1,23 @@
-﻿package com.example.hotelreservation.domain.reservation.dto;
+package com.example.hotelreservation.domain.reservation.dto;
 
 import lombok.*;
-import jakarta.validation.constraints.*; import java.time.LocalDate;
+import jakarta.validation.constraints.*;
+
+import java.time.LocalDate;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReservationRequest {
-    @NotNull private Long hotelId; @NotBlank private String roomTypeId; @NotNull private LocalDate startDate; @NotNull private LocalDate endDate; @NotNull private Long guestId;
+    @NotNull
+    private Long hotelId;
+    @NotBlank
+    private String roomTypeId;
+    @NotNull
+    private LocalDate startDate;
+    @NotNull
+    private LocalDate endDate;
+    @NotNull
+    private Long guestId;
 }

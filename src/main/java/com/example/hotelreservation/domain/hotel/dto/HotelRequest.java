@@ -1,4 +1,4 @@
-﻿package com.example.hotelreservation.domain.hotel.dto;
+package com.example.hotelreservation.domain.hotel.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -8,7 +8,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HotelRequest {
-    @NotBlank @Size(max = 255) private String name;
-    @NotBlank @Size(max = 500) private String address;
-    @Size(max = 255) private String location;
+    @NotBlank
+    @Size(max = 255)
+    private String name;
+    @NotBlank
+    @Size(max = 500)
+    private String address;
+    @Size(max = 255)
+    private String location;
 }

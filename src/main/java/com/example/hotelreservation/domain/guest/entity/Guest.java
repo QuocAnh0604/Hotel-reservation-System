@@ -1,7 +1,8 @@
-﻿package com.example.hotelreservation.domain.guest.entity;
+package com.example.hotelreservation.domain.guest.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.Instant;
 
 @Entity
@@ -26,9 +27,20 @@ public class Guest {
 
     @Column(name = "email", nullable = false)
     private String email;
-    @Column(name = "deleted_at") private Instant deletedAt;
-    @Column(name = "created_at", nullable = false, updatable = false) private Instant createdAt;
-    @Column(name = "updated_at", nullable = false) private Instant updatedAt;
-    @PrePersist void onCreate() { createdAt = updatedAt = Instant.now(); }
-    @PreUpdate void onUpdate() { updatedAt = Instant.now(); }
+    @Column(name = "deleted_at")
+    private Instant deletedAt;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
+
+    @PrePersist
+    void onCreate() {
+        createdAt = updatedAt = Instant.now();
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        updatedAt = Instant.now();
+    }
 }
