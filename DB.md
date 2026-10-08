@@ -109,7 +109,6 @@ Lưu tổng số phòng và số phòng đã đặt theo khách sạn, loại ph
 | `date` | `DATE` | Ngày tồn kho |
 | `total_inventory` | `INT` | Tổng tồn kho, không âm |
 | `total_reserved` | `INT` | Đã đặt, mặc định `0`, không âm |
-| `version` | `BIGINT` | Version phục vụ optimistic locking, mặc định `0` |
 
 Khóa chính kết hợp: (`hotel_id`, `room_type_id`, `date`).
 
@@ -174,6 +173,7 @@ Index: `idx_refresh_token_user_id`, `idx_refresh_token_expires_at`.
 | V6 | `V6__create_refresh_token.sql` | Tạo `refresh_token` |
 | V7 | `V7__inventory_check_room_count.sql` | Không cho phép đặt vượt quá tồn kho |
 | V8 | `V8__add_reservation_room_count.sql` | Thêm số lượng phòng vào `reservation` |
+| V9 | `V9__remove_inventory_version.sql` | Xóa cột optimistic locking không được sử dụng |
 
 Khi thêm thay đổi schema, tạo migration mới với version tăng dần, không sửa
 các migration đã chạy trên môi trường dùng chung.

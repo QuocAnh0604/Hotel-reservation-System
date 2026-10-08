@@ -17,9 +17,6 @@ public class RoomTypeInventory {
     private int totalInventory;
     @Column(nullable = false)
     private int totalReserved;
-    @Version
-    private long version;
-
     public int available() {
         return totalInventory - totalReserved;
     }
