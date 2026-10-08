@@ -22,6 +22,8 @@ public class Reservation {
     @Column(nullable = false)
     private String roomTypeId;
     @Column(nullable = false)
+    private Integer roomCount;
+    @Column(nullable = false)
     private LocalDate startDate;
     @Column(nullable = false)
     private LocalDate endDate;

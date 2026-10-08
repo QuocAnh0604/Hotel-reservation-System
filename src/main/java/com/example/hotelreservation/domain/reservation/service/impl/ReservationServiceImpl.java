@@ -29,12 +29,15 @@ public class ReservationServiceImpl implements ReservationService {
         validate(r);
         guestClient.verify(r.getGuestId());
         hotelClient.verify(r.getHotelId(), r.getRoomTypeId());
-        BigDecimal amount = rateClient.quote(r.getHotelId(), r.getStartDate(), r.getEndDate());
+        BigDecimal amountPerRoom = rateClient.quote(r.getHotelId(), r.getStartDate(), r.getEndDate());
         for (LocalDate date = r.getStartDate(); date.isBefore(r.getEndDate()); date = date.plusDays(1)) {
-            if (inventory.reserveNight(r.getHotelId(), r.getRoomTypeId(), date) == 0)
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "No rooms available");
+            for (int room = 0; room < r.getRoomCount(); room++) {
+                if (inventory.reserveNight(r.getHotelId(), r.getRoomTypeId(), date) == 0)
+                    throw new ResponseStatusException(HttpStatus.CONFLICT, "No rooms available");
+            }
         }
-        Reservation x = Reservation.builder().hotelId(r.getHotelId()).roomTypeId(r.getRoomTypeId()).startDate(r.getStartDate()).endDate(r.getEndDate()).guestId(r.getGuestId()).totalAmount(amount).status(ReservationStatus.PENDING).build();
+        BigDecimal amount = amountPerRoom.multiply(BigDecimal.valueOf(r.getRoomCount()));
+        Reservation x = Reservation.builder().hotelId(r.getHotelId()).roomTypeId(r.getRoomTypeId()).roomCount(r.getRoomCount()).startDate(r.getStartDate()).endDate(r.getEndDate()).guestId(r.getGuestId()).totalAmount(amount).status(ReservationStatus.PENDING).build();
         return ReservationResponse.from(reservations.save(x));
     }
 
@@ -80,7 +83,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     private void release(Reservation r) {
         for (LocalDate date = r.getStartDate(); date.isBefore(r.getEndDate()); date = date.plusDays(1))
-            inventory.releaseNight(r.getHotelId(), r.getRoomTypeId(), date);
+            for (int room = 0; room < r.getRoomCount(); room++)
+                inventory.releaseNight(r.getHotelId(), r.getRoomTypeId(), date);
     }
 
     private Reservation raw(Long id) {
@@ -103,7 +107,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     private void validate(ReservationRequest r) {
-        if (r == null || r.getStartDate() == null || r.getEndDate() == null || r.getStartDate().isBefore(LocalDate.now()) || !r.getStartDate().isBefore(r.getEndDate()))
+        if (r == null || r.getRoomCount() == null || r.getRoomCount() < 1 || r.getStartDate() == null || r.getEndDate() == null || r.getStartDate().isBefore(LocalDate.now()) || !r.getStartDate().isBefore(r.getEndDate()))
             throw bad("Invalid reservation dates");
     }
 }

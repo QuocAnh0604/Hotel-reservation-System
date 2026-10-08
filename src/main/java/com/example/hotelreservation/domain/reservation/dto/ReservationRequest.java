@@ -15,6 +15,9 @@ public class ReservationRequest {
     @NotBlank
     private String roomTypeId;
     @NotNull
+    @Min(1)
+    private Integer roomCount = 1;
+    @NotNull
     private LocalDate startDate;
     @NotNull
     private LocalDate endDate;

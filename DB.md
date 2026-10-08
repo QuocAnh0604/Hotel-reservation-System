@@ -122,6 +122,7 @@ Lưu thông tin đặt phòng.
 | `reservation_id` | `BIGSERIAL` | Khóa chính |
 | `hotel_id` | `BIGINT` | Mã khách sạn |
 | `room_type_id` | `VARCHAR(100)` | Mã loại phòng |
+| `room_count` | `INT` | Số phòng đặt; mặc định `1`, phải lớn hơn `0` |
 | `start_date` | `DATE` | Ngày nhận phòng |
 | `end_date` | `DATE` | Ngày trả phòng; phải sau `start_date` |
 | `status` | `VARCHAR(20)` | Trạng thái đặt phòng |
@@ -171,6 +172,8 @@ Index: `idx_refresh_token_user_id`, `idx_refresh_token_expires_at`.
 | V4 | `V4__create_reservation.sql` | Tạo `room_type_inventory`, `reservation` |
 | V5 | `V5__create_app_user.sql` | Tạo `app_user` |
 | V6 | `V6__create_refresh_token.sql` | Tạo `refresh_token` |
+| V7 | `V7__inventory_check_room_count.sql` | Không cho phép đặt vượt quá tồn kho |
+| V8 | `V8__add_reservation_room_count.sql` | Thêm số lượng phòng vào `reservation` |
 
 Khi thêm thay đổi schema, tạo migration mới với version tăng dần, không sửa
 các migration đã chạy trên môi trường dùng chung.
