@@ -19,15 +19,6 @@ Các biến môi trường được đọc từ file `.env` hoặc môi trườn
 | `DB_USERNAME` | Tên người dùng database |
 | `DB_PASSWORD` | Mật khẩu database |
 
-Ví dụ:
-
-```properties
-DB_URL=jdbc:postgresql://localhost:5432/hotel_reservation
-DB_USERNAME=postgres
-DB_PASSWORD=your-password
-```
-
-Không commit thông tin xác thực thật vào repository.
 
 ## Mô hình quan hệ
 
