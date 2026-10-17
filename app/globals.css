@@ -1,26 +1,25 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-paper: #f4f7f8;
+  --color-ink: #12202a;
+  --color-muted: #5c6b76;
+  --color-line: #d9e1e5;
+  --color-lagoon-50: #e6f2f4;
+  --color-lagoon-100: #cce5ea;
+  --color-lagoon-600: #0f6477;
+  --color-lagoon-700: #0b4f5f;
+  --color-lagoon-900: #08303a;
+  --color-brass: #b9822a;
+  --color-coral: #c8483a;
+  --color-coral-50: #fbebe8;
+  --color-moss: #2f7d57;
+  --color-moss-50: #e4f2ea;
+  --font-sans: "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  --font-display: Georgia, serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+html { scroll-behavior: smooth; }
+body { background: var(--color-paper); color: var(--color-ink); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+:focus-visible { outline: 2px solid var(--color-lagoon-600); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }

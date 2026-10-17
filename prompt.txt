@@ -1,0 +1,270 @@
+Bạn là Senior Frontend Developer chuyên Next.js App Router, TypeScript, React và Tailwind CSS.
+
+Tôi đang phát triển website đặt phòng khách sạn bằng Next.js. Backend FastAPI đã có nhưng hiện tại tôi muốn hoàn thiện TOÀN BỘ FRONTEND UI trước bằng mock data. Sau khi giao diện và các luồng tương tác đã hoàn chỉnh, tôi mới yêu cầu bạn tích hợp API thật và xử lý lỗi phát sinh.
+
+## 1. Nguyên tắc làm việc
+
+- Trước tiên, đọc cấu trúc thư mục, package.json, dependencies và các file hiện có.
+- Không tạo lại project Next.js.
+- Giữ nguyên cấu trúc thư mục hiện tại nếu không có lý do kỹ thuật cần thay đổi.
+- Không gọi API BE ở giai đoạn này.
+- Không yêu cầu tôi cung cấp API endpoints để xây dựng giao diện.
+- Không tự ý cài thêm thư viện nếu thư viện hiện tại đã đáp ứng yêu cầu.
+- Dùng TypeScript và Next.js App Router.
+- Sử dụng dữ liệu giả tập trung, có kiểu dữ liệu rõ ràng.
+- Mỗi loại dữ liệu mock chỉ cần khoảng 1–2 bản ghi mẫu, nhưng phải đủ để minh họa giao diện và các trạng thái nghiệp vụ.
+- Không tạo hàng chục bản ghi giả không cần thiết.
+- Không dùng dữ liệu giả rải rác trực tiếp trong JSX. Hãy tập trung chúng trong thư mục mock phù hợp.
+- Tách biệt UI, types, mock data, hooks và services để sau này có thể thay mock bằng API thật mà không phải viết lại giao diện.
+- Không để nút bấm, biểu mẫu hoặc bộ lọc chỉ mang tính trang trí. Các tương tác chính phải hoạt động với mock data.
+- Thiết kế responsive cho desktop, tablet và mobile.
+- Sử dụng các components hiện có; nếu chưa có thì tạo components có thể tái sử dụng.
+- Không xóa hoặc ghi đè code hiện tại một cách tùy tiện.
+
+## 2. Cấu trúc dự án
+
+Giữ cấu trúc hiện có, bao gồm các nhóm sau:
+
+src/app/
+- (public)/login
+- (public)/register
+- (public)/hotels
+- (public)/hotels/[hotelId]
+- (public)/hotels/[hotelId]/reviews
+- (user)/booking/[hotelId]
+- (user)/booking/success
+- (user)/my-reservations
+- (user)/my-reservations/[id]
+- admin/dashboard
+- admin/hotels
+- admin/hotels/[hotelId]/rooms
+- admin/reservations
+- admin/reservations/[id]
+- admin/reviews
+- 403
+- not-found.tsx
+- layout.tsx
+- providers.tsx
+
+src/components/
+- ui/
+- common/
+- hotel/
+- booking/
+- review/
+
+src/layouts/
+- PublicLayout
+- UserLayout
+- AdminLayout
+
+src/routes/
+- ProtectedRoute.tsx
+- RoleRoute.tsx
+
+src/context/
+- AuthContext.tsx
+
+src/services/
+- api.ts
+- auth.service.ts
+- auth.mock.ts
+- hotel.service.ts
+- reservation.service.ts
+- review.service.ts
+- availability.service.ts
+
+src/hooks/
+- useAuth
+- useHotels
+- useReservations
+- useReviews
+- useDebounce
+
+src/types/
+- user.ts
+- hotel.ts
+- room.ts
+- reservation.ts
+- review.ts
+- api.ts
+
+src/utils/
+- format.ts
+- validators.ts
+- error.ts
+- constants.ts
+
+Bạn có thể bổ sung thư mục `src/mocks/` để tập trung mock data và mock services nếu phù hợp. Không tạo file trùng lặp với những file đã tồn tại.
+
+## 3. Thiết kế giao diện
+
+Hãy thiết kế một website đặt phòng khách sạn có phong cách hiện đại, chuyên nghiệp, nhất quán.
+
+Yêu cầu:
+- Màu sắc, font chữ, spacing và border radius thống nhất.
+- Header, navigation, footer và sidebar có cấu trúc rõ ràng.
+- Có trạng thái hover, focus, disabled và loading phù hợp.
+- Form có label, validation và thông báo lỗi.
+- Bảng quản trị dễ đọc, có trạng thái, thao tác và phân trang khi phù hợp.
+- Có empty state và error state.
+- Không lạm dụng hiệu ứng hoặc animation.
+- Không để giao diện sơ sài chỉ nhằm làm cho trang có thể chạy.
+- Sử dụng hình ảnh khách sạn phù hợp nếu có nguồn ảnh khả dụng; tránh tạo ra các đường dẫn ảnh giả không tồn tại.
+
+## 4. Các trang cần hoàn thiện
+
+### A. Khu vực public
+
+1. `/login`
+   - Form đăng nhập, email và mật khẩu.
+   - Hiển thị lỗi validation, trạng thái gửi form và thông báo kết quả.
+   - Có liên kết sang đăng ký.
+
+2. `/register`
+   - Form đăng ký, validation và thông báo kết quả.
+   - Có liên kết sang đăng nhập.
+
+3. `/hotels`
+   - Danh sách khách sạn dạng card.
+   - Thanh tìm kiếm.
+   - Bộ lọc và sắp xếp phù hợp với dữ liệu mẫu.
+   - Thông tin ảnh, tên, địa điểm, giá tham khảo, rating.
+   - Có trạng thái không tìm thấy kết quả.
+
+4. `/hotels/[hotelId]`
+   - Ảnh khách sạn.
+   - Thông tin tổng quan, địa điểm, mô tả, tiện nghi, rating.
+   - Danh sách phòng với giá và thông tin sức chứa.
+   - Nút xem chi tiết/đặt phòng.
+
+5. `/hotels/[hotelId]/reviews`
+   - Danh sách đánh giá.
+   - Rating trung bình và nội dung nhận xét.
+   - Empty state nếu chưa có đánh giá.
+
+### B. Khu vực người dùng
+
+6. `/booking/[hotelId]`
+   - Form chọn ngày nhận/trả phòng, số khách và phòng nếu phù hợp với nghiệp vụ hiện tại.
+   - Thông tin khách sạn/phòng.
+   - Bảng tóm tắt giá, số đêm và tổng tiền.
+   - Validation ngày hợp lệ và dữ liệu bắt buộc.
+   - Khi xác nhận, tạo booking giả và chuyển đến trang thành công.
+
+7. `/booking/success`
+   - Hiển thị xác nhận đặt phòng bằng dữ liệu booking vừa tạo trong mock service.
+   - Mã đặt phòng, khách sạn, thời gian, tổng tiền và trạng thái.
+   - Có liên kết đến lịch sử đặt phòng.
+
+8. `/my-reservations`
+   - Danh sách đặt phòng.
+   - Trạng thái đặt phòng.
+   - Xem chi tiết và hủy đặt phòng nếu phù hợp với nghiệp vụ mẫu.
+   - Có trạng thái danh sách trống.
+
+9. `/my-reservations/[id]`
+   - Chi tiết đặt phòng.
+   - Thông tin khách sạn, phòng, ngày, số tiền và trạng thái.
+   - Các thao tác phù hợp với trạng thái hiện tại.
+
+### C. Khu vực admin
+
+10. `/admin/dashboard`
+    - Các thẻ thống kê.
+    - Danh sách đặt phòng gần đây.
+    - Thống kê doanh thu hoặc biểu đồ nếu có thể thể hiện hợp lý bằng dữ liệu mẫu.
+    - Dùng 1–2 bản ghi cho mỗi loại dữ liệu mock; không cần tạo bộ dữ liệu lớn.
+
+11. `/admin/hotels`
+    - Bảng quản lý khách sạn.
+    - Tìm kiếm, lọc, phân trang nếu phù hợp.
+    - Thêm, sửa, xóa bằng modal hoặc form.
+    - Các thao tác phải cập nhật mock state.
+
+12. `/admin/hotels/[hotelId]/rooms`
+    - Danh sách phòng của khách sạn.
+    - Thêm, sửa, xóa phòng bằng mock state.
+    - Hiển thị giá, sức chứa và trạng thái phòng.
+
+13. `/admin/reservations`
+    - Bảng đặt phòng.
+    - Lọc theo trạng thái, tìm kiếm và xem chi tiết.
+    - Các thao tác đổi trạng thái chỉ triển khai nếu có ý nghĩa trong nghiệp vụ.
+
+14. `/admin/reservations/[id]`
+    - Chi tiết đặt phòng.
+    - Thông tin khách hàng, phòng, thời gian, tổng tiền và trạng thái.
+    - Các hành động quản trị tương ứng.
+
+15. `/admin/reviews`
+    - Bảng đánh giá.
+    - Thông tin người đánh giá, khách sạn, rating và nội dung.
+    - Thao tác quản lý đánh giá bằng mock state nếu phù hợp.
+
+16. `/403`
+    - Trang thông báo không có quyền truy cập.
+
+17. `not-found.tsx`
+    - Trang 404 phù hợp với thiết kế chung.
+
+## 5. Mock data và hành vi
+
+Tạo mock data có kiểu TypeScript tương ứng với các types hiện có.
+
+Mỗi loại entity chỉ cần 1–2 bản ghi ban đầu, chẳng hạn:
+- 2 khách sạn.
+- 1–2 phòng cho mỗi khách sạn.
+- 1–2 người dùng mẫu với vai trò phù hợp.
+- 1–2 booking.
+- 1–2 review.
+
+Các quy tắc:
+- Dùng ID nhất quán giữa khách sạn, phòng, booking và review.
+- Không hardcode dữ liệu nghiệp vụ lặp lại ở nhiều nơi.
+- Tạo mock services với các hàm bất đồng bộ để mô phỏng cách gọi API trong tương lai.
+- Các thao tác thêm/sửa/xóa/cập nhật trạng thái phải cập nhật dữ liệu dùng chung trong phiên chạy hiện tại.
+- Không bắt buộc lưu mock data sau khi reload trang, trừ khi cần thiết để hoàn thiện luồng booking.
+- Nếu cần giữ booking qua chuyển trang hoặc reload, chọn cơ chế phù hợp và không lưu thông tin nhạy cảm.
+- Phân biệt rõ tài khoản demo và xác thực thật.
+- Nếu dùng mock login, cung cấp tài khoản demo và ghi rõ trong README.
+- Không giả vờ rằng mock login là bảo mật thực tế.
+- Không gọi API backend, kể cả trong useEffect.
+
+## 6. Kiến trúc để dễ tích hợp API sau này
+
+- Components chỉ chịu trách nhiệm giao diện và tương tác.
+- Hooks quản lý trạng thái và gọi services.
+- Mock services trả về dữ liệu theo types dùng chung.
+- Types phải được tái sử dụng giữa UI và services.
+- Tránh phụ thuộc trực tiếp vào cấu trúc dữ liệu giả trong từng trang.
+- Sau này có thể thay implementation của services bằng Axios/API thật mà hạn chế sửa components.
+- Giữ `NEXT_PUBLIC_API_URL` cho giai đoạn tích hợp API; chưa sử dụng nó trong giai đoạn mock UI.
+- Không triển khai tích hợp API, refresh token hoặc các cơ chế backend trong nhiệm vụ hiện tại.
+
+## 7. Thứ tự triển khai
+
+Thực hiện lần lượt:
+
+Giai đoạn 1: Khảo sát code hiện có và lập kế hoạch, chưa sửa file.
+
+Giai đoạn 2: Hoàn thiện types, mock data, mock services, UI foundation, components dùng chung và layouts.
+
+Giai đoạn 3: Hoàn thiện toàn bộ trang public và xác thực demo.
+
+Giai đoạn 4: Hoàn thiện toàn bộ trang người dùng và luồng booking giả.
+
+Giai đoạn 5: Hoàn thiện toàn bộ trang admin và các thao tác CRUD trên mock state.
+
+Giai đoạn 6: Kiểm tra toàn bộ giao diện, route, tương tác, responsive, lint, TypeScript và production build.
+
+Trong mỗi giai đoạn:
+- Liệt kê file dự định sửa/tạo.
+- Triển khai code thực tế, không chỉ đưa ra hướng dẫn.
+- Chạy kiểm tra phù hợp sau khi hoàn thành.
+- Sửa các lỗi thuộc phạm vi giai đoạn.
+- Báo cáo phần hoàn thành và phần còn thiếu.
+
+Không dừng lại ở việc tạo skeleton hoặc trang placeholder. Mục tiêu là tất cả các trang đều có giao diện hoàn chỉnh và những tương tác chính hoạt động với mock data.
+
+Bây giờ bắt đầu bằng Giai đoạn 1: khảo sát toàn bộ dự án, chưa sửa file. Sau khi báo cáo khảo sát, tiếp tục thực hiện từng giai đoạn theo kế hoạch trên.

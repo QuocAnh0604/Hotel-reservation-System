@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Demo UI
+
+The frontend currently runs entirely on local mock data; no backend API is called. Use `demo@stayvn.vn` for the demo user flow or `admin@stayvn.vn` for the admin UI. Authentication is intentionally a mock and is not a security boundary.
+
 ## Getting Started
 
 First, run the development server:
